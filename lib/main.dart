@@ -34,6 +34,20 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
+  late CounterBloc counterBloc;
+
+  @override
+  void initState() {
+    counterBloc = CounterBloc();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    counterBloc.dispose();
+    super.dispose();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -49,17 +63,21 @@ class _MyHomePageState extends State<MyHomePage> {
             const Text(
               'You have pushed the button this many times:',
             ),
-            Text(
-              '${CounterBloc.}',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
+            StreamBuilder<int>(
+                stream: counterBloc.getStream(),
+                initialData: 0,
+                builder: (context, snapshot){
+              return Text(
+                '${snapshot.data}',
+                style: Theme.of(context).textTheme.headlineMedium,
+              );
+            })
+
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: (){
-          CounterBloc.i
-        },
+        onPressed: counterBloc.increment,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
